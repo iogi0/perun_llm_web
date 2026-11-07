@@ -6,6 +6,7 @@ interface ChatViewProps {
   onOpenMenu: () => void;
   composer: ReactNode;
   showDemoNotice: boolean;
+  historySaveFailed: boolean;
   children: ReactNode;
 }
 
@@ -14,6 +15,7 @@ export function ChatView({
   onOpenMenu,
   composer,
   showDemoNotice,
+  historySaveFailed,
   children,
 }: ChatViewProps) {
   return (
@@ -32,6 +34,11 @@ export function ChatView({
       {children}
       <div className="shrink-0 px-4 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:px-6">
         <div className="mx-auto w-full max-w-[46rem]">
+          {historySaveFailed && (
+            <p role="status" className="mb-2 text-center text-[13px] text-danger">
+              History can&apos;t be saved in this browser.
+            </p>
+          )}
           {composer}
           {showDemoNotice && (
             <p className="mt-2 text-center text-[13px] text-ink-muted">

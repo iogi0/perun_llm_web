@@ -1,12 +1,14 @@
-import { createContext, useContext, useEffect, useReducer, useRef } from "react";
+import { createContext, useContext, useEffect, useReducer, useRef, useState } from "react";
 import type { Dispatch, ReactNode } from "react";
 import { getChatApi } from "../api/chatApi";
 import type { Conversation, Message } from "../types";
 import { chatReducer, createId, DEFAULT_TITLE, emptyState } from "./chatReducer";
 import type { ChatAction, ChatState } from "./chatReducer";
+import { createSaver, load, save } from "./storage";
 
 interface ChatContextValue {
   state: ChatState;
+  historySaveFailed: boolean;
   newChat: () => void;
   openChat: (id: string) => void;
   deleteChat: (id: string) => void;
@@ -59,10 +61,35 @@ async function pumpReply(
 }
 
 export function ChatProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(chatReducer, emptyState);
+  const [state, dispatch] = useReducer(chatReducer, emptyState, (initial) =>
+    chatReducer(initial, { type: "hydrated", state: load() }),
+  );
+  const [historySaveFailed, setHistorySaveFailed] = useState(false);
+  const [saver] = useState(() => createSaver(save, (saved) => setHistorySaveFailed(!saved)));
   const controllerRef = useRef<AbortController | null>(null);
+  const previousStateRef = useRef(state);
 
   useEffect(() => () => controllerRef.current?.abort(), []);
+
+  useEffect(() => {
+    const previous = previousStateRef.current;
+    if (previous === state) return;
+    previousStateRef.current = state;
+    if (previous.streaming && !state.streaming) saver.saveNow(state);
+    else saver.schedule(state);
+  }, [state, saver]);
+
+  useEffect(() => {
+    const flushWhenHidden = () => {
+      if (document.visibilityState === "hidden") saver.flush();
+    };
+    window.addEventListener("pagehide", saver.flush);
+    document.addEventListener("visibilitychange", flushWhenHidden);
+    return () => {
+      window.removeEventListener("pagehide", saver.flush);
+      document.removeEventListener("visibilitychange", flushWhenHidden);
+    };
+  }, [saver]);
 
   function startReply(conversationId: string, history: Message[], messageId: string) {
     const controller = new AbortController();
@@ -135,6 +162,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 
   const value: ChatContextValue = {
     state,
+    historySaveFailed,
     newChat,
     openChat: (id) => dispatch({ type: "conversationOpened", id }),
     deleteChat,

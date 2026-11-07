@@ -9,25 +9,20 @@ import { Sidebar } from "./components/Sidebar";
 const noop = () => undefined;
 
 export function App() {
-  const { state, newChat, openChat, deleteChat, send, stop, retry } = useChat();
+  const { state, historySaveFailed, send, stop, retry } = useChat();
   const active = state.conversations.find((c) => c.id === state.activeId);
   const hasMessages = (active?.messages.length ?? 0) > 0;
 
   return (
     <div className="grid h-dvh grid-cols-1 lg:grid-cols-[264px_minmax(0,1fr)]">
       <aside className="hidden min-h-0 border-r border-line lg:block">
-        <Sidebar
-          conversations={state.conversations}
-          activeId={state.activeId}
-          onNew={newChat}
-          onOpen={openChat}
-          onDelete={deleteChat}
-        />
+        <Sidebar />
       </aside>
       <ChatView
         title={active?.title ?? DEFAULT_TITLE}
         onOpenMenu={noop}
         showDemoNotice={hasMessages}
+        historySaveFailed={historySaveFailed}
         composer={<Composer streaming={state.streaming !== null} onSend={send} onStop={stop} />}
       >
         {active && hasMessages ? (
