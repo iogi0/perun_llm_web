@@ -5,7 +5,7 @@ export function EmptyState() {
     <div className="grid min-h-0 flex-1 place-items-center overflow-y-auto p-6 text-center">
       <div className="max-w-[46rem]">
         <Logo size={56} className="mx-auto" />
-        <h1 className="mt-4 text-[28px] leading-tight font-medium">
+        <h1 className="mt-4 text-[28px] leading-tight font-medium text-balance">
           How can I help you today?
         </h1>
         <p className="mt-2 text-ink-muted">

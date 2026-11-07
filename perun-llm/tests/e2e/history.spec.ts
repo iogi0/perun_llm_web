@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import {
   closeDrawerIfOpen,
+  confirmDialog,
   composer,
   deleteChat,
   historyItem,
@@ -10,8 +11,6 @@ import {
   sendMessage,
   waitForReply,
 } from "./helpers";
-
-test.skip(({ isMobile }) => isMobile, "History needs the drawer, added in Phase 6");
 
 const log = (page: import("@playwright/test").Page) => page.getByRole("log");
 const emptyGreeting = "How can I help you today?";
@@ -67,8 +66,9 @@ test("cancelling the dialog keeps the chat", async ({ page }) => {
   const item = historyItem(page, "Still here");
   await item.hover();
   await item.getByRole("button", { name: "Delete conversation" }).click();
-  await expect(page.getByRole("dialog").getByText("This can't be undone.")).toBeVisible();
-  await page.getByRole("dialog").getByRole("button", { name: "Cancel" }).click();
+  await expect(confirmDialog(page).getByText("This can't be undone.")).toBeVisible();
+  await confirmDialog(page).getByRole("button", { name: "Cancel" }).click();
+  await expect(confirmDialog(page)).toBeHidden();
   await expect(item).toHaveCount(1);
 });
 
@@ -174,4 +174,16 @@ test.describe("broken storage", () => {
     await waitForReply(page);
     await expect(page.getByText("History can't be saved in this browser.")).toBeVisible();
   });
+});
+
+test("a long chat title is truncated inside the sidebar", async ({ page }) => {
+  await page.goto("/");
+  await sendMessage(page, "How do I read a CSV file in Python with headers and types?");
+  await waitForReply(page);
+  await openHistory(page);
+  const overflow = await page
+    .getByRole("navigation", { name: "Chat history" })
+    .evaluate((nav) => nav.scrollWidth - nav.clientWidth);
+  expect(overflow).toBe(0);
+  await expect(page.getByRole("navigation", { name: "Chat history" }).getByRole("button", { name: "Delete conversation" })).toBeInViewport({ ratio: 1 });
 });

@@ -23,7 +23,9 @@ export function ConfirmDialog({ open, onCancel, onConfirm }: ConfirmDialogProps)
     <dialog
       ref={dialogRef}
       aria-labelledby="confirm-title"
-      onClose={onCancel}
+      onClose={(event) => {
+        if (event.target === event.currentTarget) onCancel();
+      }}
       className="m-auto w-[calc(100vw-2rem)] max-w-sm rounded-[16px] border border-line bg-surface p-5 text-ink"
     >
       <h2 id="confirm-title" className="text-[18px] font-medium">

@@ -38,7 +38,7 @@ export function Sidebar({ onNavigate }: SidebarProps) {
         New chat
       </button>
       <nav aria-label="Chat history" className="min-h-0 flex-1 overflow-y-auto">
-        <ul className="grid gap-0.5">
+        <ul className="grid grid-cols-[minmax(0,1fr)] gap-0.5">
           {state.conversations.map((conversation) => {
             const active = conversation.id === state.activeId;
             return (

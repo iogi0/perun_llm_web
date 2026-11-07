@@ -41,10 +41,14 @@ export async function deleteChat(page: Page, title: string) {
   const item = historyItem(page, title);
   await item.hover();
   await item.getByRole("button", { name: "Delete conversation" }).click();
-  await page.getByRole("dialog").getByRole("button", { name: "Delete" }).click();
+  await confirmDialog(page).getByRole("button", { name: "Delete", exact: true }).click();
 }
 
 export async function closeDrawerIfOpen(page: Page) {
   const drawer = page.locator("dialog[data-drawer][open]");
   if (await drawer.count()) await page.keyboard.press("Escape");
+}
+
+export function confirmDialog(page: Page) {
+  return page.getByRole("dialog", { name: "Delete conversation?" });
 }

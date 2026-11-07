@@ -1,15 +1,17 @@
+import { useCallback, useState } from "react";
 import { useChat } from "./chat/ChatContext";
 import { DEFAULT_TITLE } from "./chat/chatReducer";
 import { ChatView } from "./components/ChatView";
 import { Composer } from "./components/Composer";
 import { EmptyState } from "./components/EmptyState";
 import { MessageList } from "./components/MessageList";
+import { MobileDrawer } from "./components/MobileDrawer";
 import { Sidebar } from "./components/Sidebar";
-
-const noop = () => undefined;
 
 export function App() {
   const { state, historySaveFailed, send, stop, retry } = useChat();
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const closeDrawer = useCallback(() => setDrawerOpen(false), []);
   const active = state.conversations.find((c) => c.id === state.activeId);
   const hasMessages = (active?.messages.length ?? 0) > 0;
 
@@ -20,7 +22,7 @@ export function App() {
       </aside>
       <ChatView
         title={active?.title ?? DEFAULT_TITLE}
-        onOpenMenu={noop}
+        onOpenMenu={() => setDrawerOpen(true)}
         showDemoNotice={hasMessages}
         historySaveFailed={historySaveFailed}
         composer={<Composer streaming={state.streaming !== null} onSend={send} onStop={stop} />}
@@ -31,6 +33,7 @@ export function App() {
           <EmptyState />
         )}
       </ChatView>
+      <MobileDrawer open={drawerOpen} onClose={closeDrawer} />
     </div>
   );
 }

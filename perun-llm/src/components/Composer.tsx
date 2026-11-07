@@ -59,7 +59,7 @@ export function Composer({ streaming, onSend, onStop }: ComposerProps) {
     "grid size-11 shrink-0 cursor-pointer place-items-center rounded-[10px] lg:size-9 pointer-coarse:size-11";
 
   return (
-    <div className="rounded-[16px] border border-line bg-surface p-2 pl-4 shadow-[var(--composer-shadow)] focus-within:border-accent">
+    <div className="rounded-[16px] border border-line bg-surface p-2 pl-4 shadow-[var(--composer-shadow)] focus-within:border-accent focus-within:shadow-[0_0_0_1px_var(--accent),var(--composer-shadow)]">
       {text.length > COUNTER_THRESHOLD && (
         <p
           className={`pb-1 text-right text-[13px] ${overLimit ? "text-danger" : "text-ink-muted"}`}
