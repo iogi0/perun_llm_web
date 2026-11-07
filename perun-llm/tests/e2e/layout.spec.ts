@@ -1,8 +1,8 @@
 import { expect, test } from "@playwright/test";
 
 const canvasColour = {
-  light: "rgb(252, 252, 253)",
-  dark: "rgb(21, 23, 28)",
+  light: "rgb(252, 252, 252)",
+  dark: "rgb(22, 23, 25)",
 } as const;
 
 for (const colorScheme of ["light", "dark"] as const) {

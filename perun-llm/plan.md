@@ -288,19 +288,23 @@ Document text and prompts stay on the backend. The frontend only displays what i
 
 | Token | Light | Dark | Use |
 |---|---|---|---|
-| `--canvas` | `#FCFCFD` | `#15171C` | Chat background |
-| `--sidebar` | `#F3F4F7` | `#101216` | Sidebar, drawer |
-| `--surface` | `#FFFFFF` | `#1D2027` | Composer, dialogs, code-block header |
-| `--bubble` | `#ECEEF3` | `#252932` | User bubble, hovered history item |
-| `--code` | `#F5F6F8` | `#1A1D23` | Code block body |
-| `--ink` | `#161B26` | `#E9EBF0` | Text |
-| `--ink-muted` | `#5D6575` | `#9AA1AE` | Secondary text |
-| `--line` | `#E2E5EB` | `#2B2F38` | 1 px borders |
+| `--canvas` | `#FCFCFC` | `#161719` | Chat background |
+| `--sidebar` | `#F4F4F5` | `#111214` | Sidebar, drawer |
+| `--surface` | `#FFFFFF` | `#1F2023` | Composer, dialogs, code-block header |
+| `--bubble` | `#EDEEF0` | `#27292C` | User bubble, hovered history item |
+| `--code` | `#F6F6F7` | `#1C1D1F` | Code block body |
+| `--ink` | `#191B1F` | `#EAEBED` | Text |
+| `--ink-muted` | `#61656B` | `#9EA1A6` | Secondary text |
+| `--line` | `#E4E5E7` | `#2D2F32` | 1 px borders |
 | `--accent` | `#3346C2` | `#8593FF` | Send button, focus ring, active item, links |
 | `--spark` | `#D9A21B` | `#E8B931` | Logo dot only |
 | `--danger` | `#B42318` | `#F97066` | Delete, errors |
 
-Write a small highlight.js theme that maps `.hljs-*` classes to five token-derived colours (keyword, string, number, comment, title).
+Neutral values were chosen at the design checkpoint: 60% of the way from the original cool palette to neutral grey.
+
+Composer shadow: `0 2px 12px` at 6% opacity in light and 18% in dark.
+
+Write a small highlight.js theme that maps `.hljs-*` classes to five token-derived colours: keyword `--accent`, title 55% `--accent` + `--ink`, string 65% `--danger` + `--ink`, number `--danger`, comment `--ink-muted`.
 
 **Typography:**
 

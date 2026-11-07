@@ -4,7 +4,7 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist", "playwright-report", "test-results", ".claude"] },
+  { ignores: ["dist", "dist-e2e", "playwright-report", "test-results", ".claude"] },
   js.configs.recommended,
   tseslint.configs.recommended,
   {
