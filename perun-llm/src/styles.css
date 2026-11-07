@@ -162,11 +162,11 @@ dialog::backdrop {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .drawer[open],
-  .typing-dots span,
-  .streaming-caret > :last-child::after,
-  .streaming-caret > :is(ul, ol):last-child > li:last-child::after {
-    animation: none;
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
   }
 }
 

@@ -169,6 +169,21 @@ describe("chatReducer", () => {
     expect(next.conversations[0]?.messages[0]?.error).toBeUndefined();
   });
 
+  it("retrying an earlier failed reply keeps it in its original position", () => {
+    const messages = [
+      message("u1", { role: "user", status: "complete" }),
+      message("a1", { status: "error", error: "Failed" }),
+      message("u2", { role: "user", status: "complete" }),
+      message("a2", { status: "complete" }),
+    ];
+    const next = chatReducer(stateWith(conversation("a", t0, messages)), {
+      type: "assistantStarted",
+      conversationId: "a",
+      message: message("a1"),
+    });
+    expect(next.conversations[0]?.messages.map((m) => m.id)).toEqual(["u1", "a1", "u2", "a2"]);
+  });
+
   it("assistantDelta appends text to its own conversation after the user switches away", () => {
     const switched = chatReducer(streamingState(), { type: "conversationOpened", id: "b" });
     const next = chatReducer(switched, { type: "assistantDelta", conversationId: "a", messageId: "m", text: "Hi" });

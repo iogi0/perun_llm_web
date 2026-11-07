@@ -111,6 +111,7 @@ export interface Saver {
   schedule: (state: ChatState) => void;
   saveNow: (state: ChatState) => void;
   flush: () => void;
+  cancel: () => void;
 }
 
 export function createSaver(
@@ -136,6 +137,11 @@ export function createSaver(
     },
     flush() {
       if (pending) saveNow(pending);
+    },
+    cancel() {
+      if (timer !== null) clearTimeout(timer);
+      timer = null;
+      pending = null;
     },
   };
 }

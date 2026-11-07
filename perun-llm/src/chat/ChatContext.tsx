@@ -4,7 +4,7 @@ import { getChatApi } from "../api/chatApi";
 import type { Conversation, Message } from "../types";
 import { chatReducer, createId, DEFAULT_TITLE, emptyState } from "./chatReducer";
 import type { ChatAction, ChatState } from "./chatReducer";
-import { createSaver, load, save } from "./storage";
+import { createSaver, load, save, STORAGE_KEY } from "./storage";
 
 interface ChatContextValue {
   state: ChatState;
@@ -78,6 +78,22 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     if (previous.streaming && !state.streaming) saver.saveNow(state);
     else saver.schedule(state);
   }, [state, saver]);
+
+  // Another tab saved: adopt its history instead of overwriting it later.
+  // While this tab streams, its own save at the end wins.
+  const isStreaming = state.streaming !== null;
+  useEffect(() => {
+    if (isStreaming) return;
+    const adoptOtherTab = (event: StorageEvent) => {
+      if (event.key !== STORAGE_KEY) return;
+      saver.cancel();
+      const loaded = load();
+      previousStateRef.current = loaded;
+      dispatch({ type: "hydrated", state: loaded });
+    };
+    window.addEventListener("storage", adoptOtherTab);
+    return () => window.removeEventListener("storage", adoptOtherTab);
+  }, [isStreaming, saver]);
 
   useEffect(() => {
     const flushWhenHidden = () => {

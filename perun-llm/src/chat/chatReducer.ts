@@ -122,12 +122,15 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
     case "assistantStarted": {
       const conversation = state.conversations.find((c) => c.id === action.conversationId);
       if (!conversation) return state;
-      const others = conversation.messages.filter((m) => m.id !== action.message.id);
+      const exists = conversation.messages.some((m) => m.id === action.message.id);
+      const messages = exists
+        ? conversation.messages.map((m) => (m.id === action.message.id ? action.message : m))
+        : [...conversation.messages, action.message];
       return {
         streaming: { conversationId: action.conversationId, messageId: action.message.id },
         activeId: state.activeId,
         conversations: state.conversations.map((c) =>
-          c.id === action.conversationId ? { ...c, messages: [...others, action.message] } : c,
+          c.id === action.conversationId ? { ...c, messages } : c,
         ),
       };
     }

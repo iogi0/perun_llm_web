@@ -183,6 +183,16 @@ describe("createSaver", () => {
     expect(write).toHaveBeenCalledTimes(1);
   });
 
+  it("cancel drops a pending save", () => {
+    const write = vi.fn(() => true);
+    const saver = createSaver(write, vi.fn());
+    saver.schedule(state());
+    saver.cancel();
+    vi.advanceTimersByTime(1000);
+    saver.flush();
+    expect(write).not.toHaveBeenCalled();
+  });
+
   it("reports the result of each write", () => {
     const onResult = vi.fn();
     const saver = createSaver(() => false, onResult);
