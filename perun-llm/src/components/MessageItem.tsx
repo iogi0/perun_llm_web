@@ -1,5 +1,6 @@
 import type { Message } from "../types";
 import { Logo } from "./Logo";
+import { Markdown } from "./Markdown";
 
 interface MessageItemProps {
   message: Message;
@@ -36,8 +37,8 @@ export function MessageItem({ message, onRetry }: MessageItemProps) {
           </div>
         )}
         {message.content !== "" && (
-          <div className={`[overflow-wrap:anywhere] whitespace-pre-wrap ${message.status === "streaming" ? "streaming-caret" : ""}`}>
-            <p>{message.content}</p>
+          <div className={`md ${message.status === "streaming" ? "streaming-caret" : ""}`}>
+            <Markdown content={message.content} />
           </div>
         )}
         {message.status === "stopped" && (
