@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light dark;
+
+  --canvas: #fcfcfd;
+  --sidebar: #f3f4f7;
+  --surface: #ffffff;
+  --bubble: #eceef3;
+  --code: #f5f6f8;
+  --ink: #161b26;
+  --ink-muted: #5d6575;
+  --line: #e2e5eb;
+  --accent: #3346c2;
+  --spark: #d9a21b;
+  --danger: #b42318;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --canvas: #15171c;
+    --sidebar: #101216;
+    --surface: #1d2027;
+    --bubble: #252932;
+    --code: #1a1d23;
+    --ink: #e9ebf0;
+    --ink-muted: #9aa1ae;
+    --line: #2b2f38;
+    --accent: #8593ff;
+    --spark: #e8b931;
+    --danger: #f97066;
+  }
+}
+
+@theme inline {
+  --color-*: initial;
+  --color-canvas: var(--canvas);
+  --color-sidebar: var(--sidebar);
+  --color-surface: var(--surface);
+  --color-bubble: var(--bubble);
+  --color-code: var(--code);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-spark: var(--spark);
+  --color-danger: var(--danger);
+
+  --font-sans: "Onest Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    background-color: var(--canvas);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 15px;
+  }
+}
